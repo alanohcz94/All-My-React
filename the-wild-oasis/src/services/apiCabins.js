@@ -61,6 +61,7 @@ export async function createEditCabin(newCabin, id) {
   }
 
   // Create image
+  if (hasImageUrl) return data;
   // Only if it is successful then upload the image
   let imageQuery = supabase.storage.from("cabin-images");
   if (newCabin?.image) {

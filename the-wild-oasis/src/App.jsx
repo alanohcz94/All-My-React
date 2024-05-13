@@ -25,7 +25,7 @@ const queryClient = new QueryClient({
       // staleTime = The time limit the data will stay fresh in the cache until it refetches again
       // calculation is in miniseconds
       // staleTime: 60 * 1000,
-      staleTime: 0,
+      staleTime: 2000,
     },
   },
 });

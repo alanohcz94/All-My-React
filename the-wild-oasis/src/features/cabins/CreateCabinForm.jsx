@@ -1,18 +1,19 @@
 import { useForm } from "react-hook-form";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createEditCabin } from "../../services/apiCabins";
-import toast from "react-hot-toast";
-
 import Input from "../../ui/Input";
 import Form from "../../ui/Form";
 import Button from "../../ui/Button";
 import FileInput from "../../ui/FileInput";
 import Textarea from "../../ui/Textarea";
 import FormRow from "../../ui/FormRow";
+import { useCreateCabin } from "./useCreateCabin";
+import { useEditCabin } from "./useEditCabin";
 
 function CreateCabinForm({ cabinToEdit = {} }) {
   const { id: editId, ...editValues } = cabinToEdit;
   const isEdit = Boolean(editId);
+  const { isCreating, createCabin } = useCreateCabin();
+  const { isEditing, editCabin } = useEditCabin();
+  const inProgress = isCreating || isEditing;
 
   // The variable inside the "{}" are function hooks provided by the library react-hook-form
   // getValues return all the values from the entire form used in this component
@@ -22,35 +23,24 @@ function CreateCabinForm({ cabinToEdit = {} }) {
   });
   const { errors } = formState;
 
-  // We are writting this is because we want to re-validate the query and fetch the newly added cabins from the server
-  const queryClient = useQueryClient();
-
-  const { mutate: createCabin, isLoading: isCreating } = useMutation({
-    mutationFn: createEditCabin,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["cabins"] });
-      toast.success("New cabin successfully created");
-      reset();
-    },
-    onError: (error) => toast.error(error.message),
-  });
-
-  const { mutate: editCabin, isLoading: isEditing } = useMutation({
-    mutationFn: ({ newCabin, id }) => createEditCabin(newCabin, id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["cabins"] });
-      toast.success("Cabin successfully edited");
-      reset();
-    },
-    onError: (error) => toast.error(error.message),
-  });
-
-  const inProgress = isCreating || isEditing;
-
   function onSubmit(data) {
     const image = typeof data.image === "string" ? data.image : data.image[0];
-    if (isEdit) editCabin({ newCabin: { ...data, image }, id: editId });
-    else createCabin({ ...data, image: image });
+    if (isEdit)
+      editCabin(
+        { newCabin: { ...data, image }, id: editId },
+        {
+          onSuccess: () => reset(),
+        }
+      );
+    // We can use the OnSuccess handler not only in the useMutation but also where the mutate happens
+    else
+      createCabin(
+        { ...data, image: image },
+        {
+          // it is able to access the data return from the apiCabin,
+          onSuccess: (data) => reset(),
+        }
+      );
   }
 
   function onError(errors) {

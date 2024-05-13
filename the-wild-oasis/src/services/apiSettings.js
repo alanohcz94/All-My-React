@@ -15,9 +15,15 @@ export async function updateSetting(newSetting) {
   const { data, error } = await supabase
     .from("settings")
     .update(newSetting)
-    // There is only ONE row of settings, and it has the ID=1, and so this is the updated one
     .eq("id", 1)
     .single();
+
+  // let settingQuery = supabase.from("settings");
+
+  // // There is only ONE row of settings, and it has the ID=1, and so this is the updated one
+  // settingQuery = settingQuery.update(newSetting).eq("id", 1);
+
+  // const { data, error } = await settingQuery.single();
 
   if (error) {
     console.error(error);
