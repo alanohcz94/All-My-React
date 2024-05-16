@@ -8,7 +8,7 @@ import FormRow from "../../ui/FormRow";
 import { useCreateCabin } from "./useCreateCabin";
 import { useEditCabin } from "./useEditCabin";
 
-function CreateCabinForm({ cabinToEdit = {} }) {
+function CreateCabinForm({ cabinToEdit = {}, onCloseModal }) {
   const { id: editId, ...editValues } = cabinToEdit;
   const isEdit = Boolean(editId);
   const { isCreating, createCabin } = useCreateCabin();
@@ -29,7 +29,10 @@ function CreateCabinForm({ cabinToEdit = {} }) {
       editCabin(
         { newCabin: { ...data, image }, id: editId },
         {
-          onSuccess: () => reset(),
+          onSuccess: () => {
+            reset();
+            onCloseModal?.();
+          },
         }
       );
     // We can use the OnSuccess handler not only in the useMutation but also where the mutate happens
@@ -38,7 +41,10 @@ function CreateCabinForm({ cabinToEdit = {} }) {
         { ...data, image: image },
         {
           // it is able to access the data return from the apiCabin,
-          onSuccess: (data) => reset(),
+          onSuccess: (data) => {
+            reset();
+            onCloseModal?.();
+          },
         }
       );
   }
@@ -50,7 +56,8 @@ function CreateCabinForm({ cabinToEdit = {} }) {
 
   return (
     // OnError will be called if the validation failed
-    <Form onSubmit={handleSubmit(onSubmit, onError)}>
+    <Form onSubmit={handleSubmit(onSubmit, onError)}
+    type={onCloseModal ? "modal" : "regular"}>
       <FormRow label="Cabin name" error={errors?.name?.message}>
         {/* There is no need to use useState or any controlled item to be added to be input component because we are using the react-hook-form library to control it*/}
         <Input
@@ -142,7 +149,7 @@ function CreateCabinForm({ cabinToEdit = {} }) {
       <FormRow>
         {/* type is an HTML attribute! */}
         {/* The reset button works as it is a normal HTML attribute that works and acts as a reset button instead of a submit button */}
-        <Button variation="secondary" type="reset">
+        <Button variation="secondary" type="reset" onClick={() => onCloseModal?.()}>
           Cancel
         </Button>
         <Button disabled={inProgress}>
