@@ -13,6 +13,8 @@ import GlobalStyles from "./styles/GlobalStyles";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Toaster } from "react-hot-toast";
+import Booking from "./pages/Booking";
+import CheckIn from "./pages/CheckIn";
 // Creating React Query is just like setting up a context API or redux as well.
 /*
   First we create a place where the data lives
@@ -47,6 +49,8 @@ const App = () => {
             <Route index element={<Navigate replace to="dashboard" />} />
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="bookings" element={<Bookings />} />
+            <Route path="bookings/:bookingId" element={<Booking />} />
+            <Route path="checkin/:bookingId" element={<CheckIn />} />
             <Route path="cabins" element={<Cabins />} />
             <Route path="users" element={<Users />} />
             <Route path="settings" element={<Settings />} />

@@ -1,4 +1,9 @@
+import React from 'react'
+import { HiArrowLeft, HiArrowRight } from 'react-icons/hi2';
+import { useSearchParams } from 'react-router-dom';
 import styled from "styled-components";
+import {PAGE_SIZE} from '../utils/constants';
+
 
 const StyledPagination = styled.div`
   width: 100%;
@@ -55,3 +60,38 @@ const PaginationButton = styled.button`
     color: var(--color-brand-50);
   }
 `;
+
+const Pagination = ({count}) => {
+  // calculating the page is always base on current page and we want to get it from the URL
+  const [searchParams,  setSearchParams] = useSearchParams();
+  const currentPage = !searchParams.get("page") ? 1 : Number(searchParams.get("page"));
+  const pageCount = Math.ceil(count / PAGE_SIZE);
+
+  function next() {
+    const next = currentPage === pageCount ? currentPage : currentPage + 1;
+    searchParams.set('page', next);
+    setSearchParams(searchParams);
+  }
+
+  function previous() {
+    const prev = currentPage === 1 ? currentPage : currentPage - 1;
+    searchParams.set('page', prev);
+    setSearchParams(searchParams);
+  }
+
+  return (
+    <StyledPagination>
+      <p>
+        <span>Showing</span><span> {(currentPage-1)*PAGE_SIZE + 1} </span><span>to</span><span> {(currentPage === pageCount ? count : currentPage * PAGE_SIZE)}</span><span> of</span><span> {count}</span><span> results</span>
+      </p>
+      {!(pageCount <= 1) && 
+        <Buttons>
+          <PaginationButton onClick={previous} disabled={currentPage === 1}><HiArrowLeft /></PaginationButton>
+          <PaginationButton onClick={next}  disabled={currentPage === pageCount}><HiArrowRight /></PaginationButton>
+        </Buttons>
+      }
+    </StyledPagination>
+  )
+}
+
+export default Pagination

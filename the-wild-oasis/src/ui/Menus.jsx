@@ -120,7 +120,7 @@ function Button({children, icon, onClick}) {
 
   function handleClick() {
     onClick?.();
-    close();
+    close?.();
   }
   
   return (

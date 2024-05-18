@@ -81,7 +81,7 @@ function CreateCabinForm({ cabinToEdit = {}, onCloseModal }) {
               message: "Capacity should be atleast 1",
             },
             max: {
-              value: 8,
+              value: 20,
               message: "Capacity is limited to 8",
             },
           })}

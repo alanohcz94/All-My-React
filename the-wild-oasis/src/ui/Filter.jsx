@@ -44,13 +44,18 @@ const Filter = ({filterField, options}) => {
   function handleClick(value) {
     // First vlaue in set(<field value>, value passed from clicked)
     searchParams.set(filterField, value);
+    if(searchParams.get("page")) searchParams.set("page", 1);
     setSearchParams(searchParams);
   }
 
   return (
     <StyledFilter>
       {options.map(option => {
-        return <FilterButton disabled={option.value === currentFilteredValue} active={option.value === currentFilteredValue} onClick={() => handleClick(option.value)} key={option.value}>{option.label}</FilterButton>
+        return <FilterButton 
+          disabled={option.value === currentFilteredValue} 
+          active={option.value === currentFilteredValue} 
+          onClick={() => handleClick(option.value)} key={option.value}>{option.label}
+        </FilterButton>
       })}
     </StyledFilter>
   )
