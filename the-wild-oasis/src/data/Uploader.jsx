@@ -58,10 +58,10 @@ async function createBookings() {
     const cabin = cabins.at(booking.cabinId - 1);
     const numNights = subtractDates(booking.endDate, booking.startDate);
     const cabinPrice = numNights * (cabin.regularPrice - cabin.discount);
-    const extrasPrice = booking.hasBreakfast
+    const extraPrice = booking.hasBreakfast
       ? numNights * 15 * booking.numGuests
       : 0; // hardcoded breakfast price
-    const totalPrice = cabinPrice + extrasPrice;
+    const totalPrice = cabinPrice + extraPrice;
 
     let status;
     if (
@@ -86,7 +86,7 @@ async function createBookings() {
       ...booking,
       numNights,
       cabinPrice,
-      extrasPrice,
+      extraPrice,
       totalPrice,
       guestId: allGuestIds.at(booking.guestId - 1),
       cabinId: allCabinIds.at(booking.cabinId - 1),
@@ -94,35 +94,33 @@ async function createBookings() {
     };
   });
 
-  console.log(finalBookings);
-
   const { error } = await supabase.from("bookings").insert(finalBookings);
   if (error) console.log(error.message);
 }
 
 function Uploader() {
-  const [isLoading, setIsLoading] = useState(false);
+  // const [isLoading, setIsLoading] = useState(false);
 
   async function uploadAll() {
-    setIsLoading(true);
+    // setIsLoading(true);
     // Bookings need to be deleted FIRST
     await deleteBookings();
-    await deleteGuests();
-    await deleteCabins();
+    // await deleteGuests();
+    // await deleteCabins();
 
     // Bookings need to be created LAST
-    await createGuests();
-    await createCabins();
+    // await createGuests();
+    // await createCabins();
     await createBookings();
 
-    setIsLoading(false);
+    // setIsLoading(false);
   }
 
   async function uploadBookings() {
-    setIsLoading(true);
+    // setIsLoading(true);
     await deleteBookings();
     await createBookings();
-    setIsLoading(false);
+    // setIsLoading(false);
   }
 
   return (
@@ -140,13 +138,9 @@ function Uploader() {
     >
       <h3>SAMPLE DATA</h3>
 
-      <Button onClick={uploadAll} disabled={isLoading}>
-        Upload ALL
-      </Button>
+      <Button onClick={uploadAll}>Upload ALL</Button>
 
-      <Button onClick={uploadBookings} disabled={isLoading}>
-        Upload bookings ONLY
-      </Button>
+      <Button onClick={uploadBookings}>Upload bookings ONLY</Button>
     </div>
   );
 }

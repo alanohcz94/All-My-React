@@ -1,5 +1,4 @@
 // This hook here is created because of the hook being only related to the cabins feature
-// How to determin
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { deleteCabin } from "../../services/apiCabins";
