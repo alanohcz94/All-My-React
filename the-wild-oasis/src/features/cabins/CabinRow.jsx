@@ -78,7 +78,7 @@ const CabinRow = ({ cabin }) => {
         <Menus.Menu>
           <Menus.Toggle id={cabinId}/>
           <Menus.List id={cabinId}>
-            <Menus.Button icon={<HiSquare2Stack />} onClick={() => handleDuplicate(cabin)}>Duplicate</Menus.Button>
+            <Menus.Button icon={<HiSquare2Stack />} onClick={() => handleDuplicate(cabin)} disabled={isCreating}>Duplicate</Menus.Button>
 
             <Modal.Open opens="edit-form">
               <Menus.Button icon={<HiPencil />}>Edit</Menus.Button>

@@ -6,7 +6,7 @@ import { formatCurrency } from "../../utils/helpers";
 
 const Stats = ({ bookings, confirmedStays, numDays, cabinCount }) => {
   // 1. number of bookings
-  const numBookings = bookings.legth;
+  const numBookings = bookings.length;
 
   // 2. total Sales
   const sales = bookings.reduce((acc, booking) => acc + booking.totalPrice, 0);
